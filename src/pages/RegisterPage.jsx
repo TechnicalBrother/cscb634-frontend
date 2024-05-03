@@ -11,14 +11,42 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    // Submit these values to your backend/API
-    console.log('Register with:', email, password);
+
+    // Prepare the data to be sent to the API
+    const data = {
+      email,
+      password
+    };
+
+    // API call to register the user
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/perform_register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to register. Please try again.');
+      }
+
+      const result = await response.json();
+      console.log('Registration successful:', result);
+      alert('Registration successful!');
+
+      // Optionally clear the form or redirect the user
+    } catch (error) {
+      console.error('Registration failed:', error);
+      alert('Registration failed. Please try again.');
+    }
   };
   return <AppLayout>
     <Header>Sign up</Header>
