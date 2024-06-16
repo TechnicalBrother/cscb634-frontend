@@ -4,18 +4,29 @@ import itemList from '../Assets/random_products_175.json';
 import styled from 'styled-components';
 import ShoppingBasketIcon from '../Assets/shopping-basket.png';
 import { Link } from 'react-router-dom';
+import Button from '../components/Button';
+import Input from '../components/fields/Input';
+import { Header, Form } from "../SharedStyledComponents";
 
 const ShopPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchedProducts, setSearchedProducts] = useState(itemList);
   const [sortTerm, setSortTerm] = useState('AtoZ');
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [isInPay, setIsInPay] = useState(false);
   const [basketItems, setBasketItems] = useState(itemList.map((item) => ({
     product: item,
     quantity: 0,
   })));
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [CVV, setCVV] = useState('');
 
   useEffect(() => updateSearchedProducts(), [searchTerm, sortTerm, inStockOnly]);
+
+  const handleSubmit = () => {
+    alert('Success!');
+  };
 
   const showBasket = () => {
     let areaObject = document.getElementById('shopping-area');
@@ -97,48 +108,61 @@ const ShopPage = () => {
   };
 
   return (<Container>
-    <LogoBar>
-      <LogoArea>
-        NBU shop
-      </LogoArea>
-      <Link to="/" > Home </Link>
-      <Link to="/login" >Login</Link>
-      <Link to="/register" >Register</Link>
-      <ShoppingIconArea>
-        <img id="shopping-icon" onClick={showBasket} src={ShoppingBasketIcon} alt="Shopping Basket" />
-      </ShoppingIconArea>
-      <ShoppingArea id="shopping-area">
-        <ExitArea>
-          <ExitIcon onClick={hideBasket}>x</ExitIcon>
-        </ExitArea>
-        {basketItems.filter((item) => item.quantity > 0).map((item) => (
-          <ShoppingRow key={item.product.id}>
-            <ShoppingInformation>
-              <p>{item.product.name} (£{item.product.price.toFixed(2)}) - {item.quantity}</p>
-            </ShoppingInformation>
-            <button onClick={() => handleBasket(item.product.id, false)}>Remove</button>
-          </ShoppingRow>
-        ))}
-        <p>{!basketItems.some(item => item.quantity > 0) ? 'Your basket is empty' : `Total: £${calculateTotal()}`}</p>
-      </ShoppingArea>
-    </LogoBar>
-    <SearchBar>
-      <input type="text" placeholder="Search..." onChange={changeEventObject => setSearchTerm(changeEventObject.target.value)} />
-      <ControlArea>
-        <select onChange={(e) => setSortTerm(e.target.value)}>
-          <option value="AtoZ">By name (A - Z)</option>
-          <option value="ZtoA">By name (Z - A)</option>
-          <option value="£LtoH">By price (low - high)</option>
-          <option value="£HtoL">By price (high - low)</option>
-          <option value="*LtoH">By rating (low - high)</option>
-          <option value="*HtoL">By rating (high - low)</option>
-        </select>
-        <input id="inStock" type="checkbox" onChange={(e) => setInStockOnly(e.target.checked)} />
-        <label htmlFor="inStock">In stock</label>
-      </ControlArea>
-    </SearchBar>
-    <ResultsIndicator>{resultsIndicator()}</ResultsIndicator>
-    <ProductList itemList={searchedProducts} addToBasket={(id) => handleBasket(id, true)} />
+    {isInPay ?
+      <>
+        <Header>Finish order</Header>
+        <Form onSubmit={handleSubmit}>
+          <Input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} label="Card Number" />
+          <Input value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} label="Expiry date" />
+          <Input value={CVV} onChange={(e) => setCVV(e.target.value)} label="CVV" />
+          <Button type="submit">Login</Button>
+          <Button type="button" onClick={() => {
+            setIsInPay(false)
+          }} >Go back</Button>
+        </Form>
+      </> :
+      <>
+        <LogoBar>
+          <LogoArea>
+            NBU shop
+          </LogoArea>
+          <ShoppingIconArea>
+            <img id="shopping-icon" onClick={showBasket} src={ShoppingBasketIcon} alt="Shopping Basket" />
+          </ShoppingIconArea>
+          <ShoppingArea id="shopping-area">
+            <ExitArea>
+              <ExitIcon onClick={hideBasket}>x</ExitIcon>
+            </ExitArea>
+            {basketItems.filter((item) => item.quantity > 0).map((item) => (
+              <ShoppingRow key={item.product.id}>
+                <ShoppingInformation>
+                  <p>{item.product.name} (£{item.product.price.toFixed(2)}) - {item.quantity}</p>
+                </ShoppingInformation>
+                <button onClick={() => handleBasket(item.product.id, false)}>Remove</button>
+              </ShoppingRow>
+            ))}
+            <p>{!basketItems.some(item => item.quantity > 0) ? 'Your basket is empty' : `Total: £${calculateTotal()}`}</p>
+            <Button onClick={() => { setIsInPay(true) }}>Pay now</Button>
+          </ShoppingArea>
+        </LogoBar>
+        <SearchBar>
+          <input type="text" placeholder="Search..." onChange={changeEventObject => setSearchTerm(changeEventObject.target.value)} />
+          <ControlArea>
+            <select onChange={(e) => setSortTerm(e.target.value)}>
+              <option value="AtoZ">By name (A - Z)</option>
+              <option value="ZtoA">By name (Z - A)</option>
+              <option value="£LtoH">By price (low - high)</option>
+              <option value="£HtoL">By price (high - low)</option>
+              <option value="*LtoH">By rating (low - high)</option>
+              <option value="*HtoL">By rating (high - low)</option>
+            </select>
+            <input id="inStock" type="checkbox" onChange={(e) => setInStockOnly(e.target.checked)} />
+            <label htmlFor="inStock">In stock</label>
+          </ControlArea>
+        </SearchBar>
+        <ResultsIndicator>{resultsIndicator()}</ResultsIndicator>
+        <ProductList itemList={searchedProducts} addToBasket={(id) => handleBasket(id, true)} />
+      </>}
   </Container>
   );
 }
