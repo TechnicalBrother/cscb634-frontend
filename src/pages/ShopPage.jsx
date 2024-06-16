@@ -188,6 +188,7 @@ const ShoppingArea = styled.div`
   border: 1px solid black;
   z-index: 1;
   display: none;
+  top: 0px;
 `;
 
 const ExitArea = styled.div`
