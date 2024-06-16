@@ -3,12 +3,15 @@ import AppLayout from "../components/AppLayout";
 import Button from "../components/Button";
 import Input from "../components/fields/Input";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const RegisterPage = () => {
   // State to store input values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   // Function to handle form submission
   const handleSubmit = async (event) => {
@@ -23,6 +26,7 @@ const RegisterPage = () => {
       email,
       password
     };
+
 
     // API call to register the user
     try {
@@ -40,7 +44,7 @@ const RegisterPage = () => {
 
       const result = await response.json();
       console.log('Registration successful:', result);
-      alert('Registration successful!');
+      navigate('/login');
 
       // Optionally clear the form or redirect the user
     } catch (error) {
@@ -55,6 +59,7 @@ const RegisterPage = () => {
       <Input value={password} onChange={(e) => setPassword(e.target.value)} label="Password" />
       <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} label="Confirm Password" />
       <Button type="submit">Register</Button>
+      <Link to="/login" >Login</Link>
     </Form>
   </AppLayout>
 }

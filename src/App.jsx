@@ -8,7 +8,6 @@ import {
 // Import your page components
 // import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
-import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ShopPage from './pages/ShopPage';
@@ -16,8 +15,6 @@ import ShopPage from './pages/ShopPage';
 function App() {
   return (
     <Router>
-      {/* <Header /> */}
-
       {/* Define the routes */}
       <Routes>
         {/* <Route path="/" element={<HomePage />} /> */}
