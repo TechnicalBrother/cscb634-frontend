@@ -3,7 +3,6 @@ import ProductList from '../components/ProductList';
 import itemList from '../Assets/random_products_175.json';
 import styled from 'styled-components';
 import ShoppingBasketIcon from '../Assets/shopping-basket.png';
-import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import Input from '../components/fields/Input';
 import { Header, Form } from "../SharedStyledComponents";
