@@ -42,7 +42,7 @@ const RegisterPage = () => {
         throw new Error('Failed to register. Please try again.');
       }
 
-      const result = await response.json();
+      const result = await response.text();
       console.log('Registration successful:', result);
       navigate('/login');
 

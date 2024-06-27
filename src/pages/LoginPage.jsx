@@ -33,7 +33,7 @@ const RegisterPage = () => {
         throw new Error('Failed to login. Please try again.');
       }
 
-      const result = await response.json();
+      const result = await response.text();
       console.log('Login successful:', result);
       navigate('/');
 
